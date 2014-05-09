@@ -11,27 +11,28 @@ name: Delegator.SubmitLink
 
 (function(){
 
+	var createInput = function(name, value){
+		return new Element('input', {
+			type: 'hidden',
+			name: name,
+			value: value
+		});
+	};
+
 	var injectValues = function(form, data){
 		var injected = new Elements();
 		Object.each(data, function(value, key){
 			if (typeOf(value) == 'array'){
 				value.each(function(val){
-					injected.push(
-						new Element('input', {
-							type: 'hidden',
-							name: key,
-							value: val
-						}).inject(form)
-					);
+					injected.push(createInput(key, val));
 				});
 			} else {
-				new Element('input', {
-					type: 'hidden',
-					name: key,
-					value: value
-				}).inject(form);
+				injected.push(
+					createInput(key, value)
+				);
 			}
 		});
+		form.adopt(injected);
 		return injected;
 	};
 
